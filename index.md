@@ -1,3 +1,6 @@
-# Willy Lin's Blog
+---
+layout: home
+title: Willy Lin's Blog
+---
 
 Writing down my research journey.
