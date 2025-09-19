@@ -1,0 +1,40 @@
+---
+layout: default
+---
+<link href="/css/override.css" rel="stylesheet" type="text/css">
+<article class="publication h-entry" itemscope itemtype="http://schema.org/ScholarlyArticle">
+
+  <header class="publication-header">
+    <h1 class="publication-title p-name" itemprop="name headline">{{ page.title | escape }}</h1>
+    <p class="publication-meta">
+      {%- if page.authors -%}
+        <span itemprop="author">{{ page.authors }}</span>
+      {%- endif -%}
+      {%- if page.venue -%}
+        • <em itemprop="isPartOf">{{ page.venue }}</em>
+      {%- endif -%}
+      {%- if page.year -%}
+        • <time itemprop="datePublished">{{ page.year }}</time>
+      {%- endif -%}
+      {%- if page.type -%}
+        • <span class="publication-type">{{ page.type | capitalize }}</span>
+      {%- endif -%}
+    </p>
+    {%- if page.url -%}
+      <p class="publication-link">
+        <a href="{{ page.url }}" target="_blank" rel="noopener">View Publication →</a>
+      </p>
+    {%- endif -%}
+  </header>
+
+  <div class="share-links">
+    {% include sharelinks.html %}
+  </div>
+
+  <div class="publication-content e-content" itemprop="articleBody">
+    {{ content }}
+    {% include navlinks.html %}
+  </div>
+
+  <a class="u-url" href="{{ page.url | relative_url }}" hidden></a>
+</article>
