@@ -1,1 +1,12 @@
 ﻿_site
+
+# Ruby/Bundler dependencies
+vendor/
+.bundle/
+Gemfile.lock
+
+# Jekyll cache
+.jekyll-cache/
+
+# History directory (appears to be local file history)
+.history/

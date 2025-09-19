@@ -26,14 +26,46 @@
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"></script>
   <script>
     document.addEventListener("DOMContentLoaded", function() {
-      renderMathInElement(document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
+      // Helper to (re)render math in a root element
+      function renderAll(root) {
+        try {
+          renderMathInElement(root || document.body, {
+            delimiters: [
+              {left: '$$', right: '$$', display: true},
+              {left: '$', right: '$', display: false},
+              {left: '\\(', right: '\\)', display: false},
+              {left: '\\[', right: '\\]', display: true}
+            ],
+            throwOnError: false
+          });
+        } catch (e) {
+          // fail silently in case KaTeX isn't available yet
+          console.debug('KaTeX render failed:', e);
+        }
+      }
+
+      // Initial render
+      renderAll(document.body);
+
+      // Re-run render when the DOM changes (covers live-reload partial updates)
+      let renderTimeout = null;
+      const observer = new MutationObserver(function(mutations) {
+        if (renderTimeout) clearTimeout(renderTimeout);
+        renderTimeout = setTimeout(function() {
+          renderAll(document.body);
+        }, 50);
+      });
+      observer.observe(document.body, { childList: true, subtree: true });
+
+      // Also listen for messages from LiveReload (some setups post messages)
+      window.addEventListener('message', function(e) {
+        try {
+          if (e && e.data && (e.data === 'reload' || e.data.type === 'reload' || e.data.type === 'reloading')) {
+            renderAll(document.body);
+          }
+        } catch (err) {
+          // ignore
+        }
       });
     });
   </script>
