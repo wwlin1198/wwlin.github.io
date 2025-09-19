@@ -1,6 +1,6 @@
 ---
 layout: home
-title: "Willy Lin's Blog"
+title: "About Me"
 ---
 
-Writing down my research journey.
+Currently writing my research journey.
