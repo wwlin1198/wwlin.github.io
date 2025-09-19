@@ -1,0 +1,10 @@
+---
+title: "Toward Life-Long Creative Problem Solving: Using World Models for Increased Performance in Novelty Resolution"
+authors: "Your Name, Co-authors"
+venue: "ICCC"
+year: 2022
+url: "https://mulip.cs.tufts.edu/papers/ICCC-2022_6S_Gizzi.pdf"
+type: "conference"
+---
+
+Brief description or abstract of the paper if desired.
