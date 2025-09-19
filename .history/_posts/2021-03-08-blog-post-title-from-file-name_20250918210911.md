@@ -13,8 +13,7 @@ Before we start, make sure that all the workstations and robots have their own s
 
 #### Installing Packages
 
-#### Running the Turtlebots with Multi Master Fkie
-First on the main turtlebot or main computer:
+#### Running the Turtlebots
 <div class="code-block-container">
   <div class="code-block-header">
     <span>Bash</span>
@@ -27,7 +26,7 @@ First on the main turtlebot or main computer:
   <div class="code-block-header">
     <span>Bash</span>
   </div>
-  <pre><code class="language-bash">export ROS_IP=http://robot_A:11311</code></pre>
+  <pre><code class="language-bash">export ROS_MASTER_URI=http://robot_A:11311</code></pre>
 </div>
 
 ```powershell

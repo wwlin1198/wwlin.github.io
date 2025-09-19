@@ -14,7 +14,6 @@ Before we start, make sure that all the workstations and robots have their own s
 #### Installing Packages
 
 #### Running the Turtlebots with Multi Master Fkie
-First on the main turtlebot or main computer:
 <div class="code-block-container">
   <div class="code-block-header">
     <span>Bash</span>
