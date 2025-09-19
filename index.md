@@ -1,15 +1,6 @@
 ---
-layout: page
+layout: home
+title: "Willy Lin's Blog"
 ---
 
-# Willy Lin's Blog
-
 Writing down my research journey.
-
-## Posts
-
-*Debug: Found {{ site.posts.size }} posts*
-
-{% for post in site.posts %}
-### [{{ post.title }}]({{ post.url | relative_url }})
-{% endfor %}
