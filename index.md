@@ -12,6 +12,8 @@ Writing down my research journey.
 ### [{{ post.title }}]({{ post.url | relative_url }})
 {% endfor %}
 
+<!-- DEBUG: Posts section ends here -->
+
 ## Publications
 
 {% assign sorted_pubs = site.publications | sort: 'year' | reverse %}
