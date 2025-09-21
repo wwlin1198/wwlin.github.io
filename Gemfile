@@ -8,6 +8,7 @@ group :jekyll_plugins do
   gem "jekyll-feed", "~> 0.12"
   gem "jekyll-sitemap"
   gem "jekyll-seo-tag"
+  gem "jekyll-scholar"
 end
 
 # For Ruby >= 3, WEBrick is no longer bundled with Ruby stdlib

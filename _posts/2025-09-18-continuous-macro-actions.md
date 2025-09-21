@@ -65,7 +65,7 @@ $$ \phi : A^\tau \longrightarrow \mathcal{M}, \qquad m = \phi(a_0, a_1, \dots, a
 During execution of $m$, at each underlying step $t=0,\dots,\tau-1$, the agent executes a discrete primitive action based on the local primitive observation history $H^A_i$. The macro-observation $z$ seen at macro-termination can itself be viewed as a function of the primitive observations: $\psi: \Omega^\tau \to \mathcal{Z}$.
 
 #### Continuous macro-action as a Mac-DecPOMDP:
-A MacDec-POMDP \cite{amato_planning_nodate,amato_planning_2014} is defined as the tuple:
+A MacDec-POMDP {% cite amato2015decentralized amato2014scalable %} is defined as the tuple:
 
 $$\langle I, S, A, M, \Omega, \zeta, T, R, O, Z, \mathbb{H}, \gamma \rangle$$
 
@@ -85,7 +85,7 @@ $$V^{\vec{\Psi}}(s_{(0)}) = \mathbb{E}\!\left[\sum_{t=0}^{\mathbb{H}-1} \gamma^t
 
 where $\gamma \in [0,1]$ is the discount, and $\mathbb{H}$ is the number of time steps until the problem terminates. 
 
-The idea is that it will randomly choose an ending point at some time step $t \mid h$. Learning policy over m as well as policy over b. Or say that previously it is predefined but now we assume it is not. Write as two seperate functions or as one thing. Answer when do I learn the termination function and when do I learn the other one? What would be the value if i stopped vs continued.
+The idea is that it will randomly choose an ending point at some time step $t \mid h$. Learning policy over m as well as policy over b. I could say that previously it is predefined but now we assume it is not. I could write as two seperate functions or as one thing. I am not sure yet. When do I learn the termination function and when do I learn the other one? What would be the value if I stopped vs continued. These topics need to be explored more in the future. 
 
 When the option terminates (at primitive step $\tau_i$), there will be a new *macro-observation* $z^i$ via
 
@@ -137,7 +137,7 @@ P(h'\mid h, m) &= P(z'\mid h, m)
 &= \mathbb{E}_{\tau \sim \beta_m}\,\Bigl[\gamma^{\tau}\, \mathbb{E}_{s\mid h}\bigl[\mathbb{E}_{s'\mid s,m,\tau}[\,P(z'\mid m,s')\,]\bigr]\Bigr]
 \end{aligned}$$
 
-Next, we follow the proof of the policy gradient theorem (Sutton et al. 2000):
+Next, we follow the proof of the policy gradient theorem {% cite sutton2000policy %}:
 
 $$\begin{aligned}
 \nabla_{\theta}V^{\Psi_{\theta}}(h)
@@ -195,3 +195,9 @@ $$\begin{aligned}
 &= \mathbb{E}_{h\sim\rho^{\Psi_{\theta}}}\Bigl[\mathbb{E}_{m\sim\Psi_{\theta}(\cdot\mid h)}\bigl[\nabla_{\theta}\log\Psi_{\theta}(m\mid h)Q^{\Psi_{\theta}}(h,m)\bigr]\Bigr] \\
 &= \mathbb{E}_{h\sim\rho^{\Psi_{\theta}},\,m\sim\Psi_{\theta}}\bigl[\nabla_{\theta}\log\Psi_{\theta}(m\mid h)Q^{\Psi_{\theta}}(h,m)\bigr]
 \end{aligned}$$
+
+---
+
+## References
+
+{% bibliography --cited %}
