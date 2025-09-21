@@ -3,6 +3,40 @@ hr {
   margin-bottom: 20px;
 }
 
+/* Image sizing classes */
+.img-small {
+  max-width: 300px;
+  height: auto;
+  display: block;
+  margin: 20px auto;
+}
+
+.img-medium {
+  max-width: 500px;
+  height: auto;
+  display: block;
+  margin: 20px auto;
+}
+
+.img-large {
+  max-width: 700px;
+  height: auto;
+  display: block;
+  margin: 20px auto;
+}
+
+.img-full {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 20px auto;
+}
+
+.img-center {
+  display: block;
+  margin: 20px auto;
+}
+
 /* Post navigation links */
 .post_navi {
   display: flex;

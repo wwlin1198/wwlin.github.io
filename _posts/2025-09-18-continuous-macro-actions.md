@@ -16,20 +16,7 @@ Let's have an example with two rovers in a multi-agent scenario. We can assume t
 ## Notation and Function Definitions
 These are the commmon functions and notations that you would probably see in a macro-action paper. 
 
--   $Q^{\theta_i}_{\phi_i}(h_i, m_i)$ is the decentralized critic
--   $Q^{\vec{\Psi}}_{\phi}(\vec{h}, \vec{m})$ is the centralized critic
--   $\Psi_{\theta_i}(m_i \mid h_i)$ is the macro-action-based policy and is the individual actor
--   $\Psi_{\theta}(\vec{m} \mid \vec{h})$ is the centralized actor or joint macro-action-based policy
--   $V_{\mathbf{w}_i}^{\Psi_{\theta_i}}(h_i)$ is the local history value function or critic
--   $V_{\mathbf{w}}^{\Psi_{\theta}}(\vec{h})$ is the centralized history value function or critic
--   $V_{\mathbf{w_i}}^{\vec{\Psi}_{\theta_i}}(\vec{h_i})$ is the separate centralized critic used in MAPPO
--   $r_i^c$ is the cumulative-discounted reward of the macro-action taking $\tau_{mi}$ time steps from beginning.
--   $Q_{\phi_i}(h_i, m_i)$ is the individual macro-action-value function
--   $Q_{\phi_i}(\vec{h}_i, \vec{m}_i)$ is the joint macro-action value function
--   $x$ represents the available centralized information
--   $\vec{A}$ advantage calculated using centralized information using GAE
--   ${\alpha}$ is the positive coefficient for clipping function
--   ${\beta}$ is the negative coefficient for the clipping function
+![Macro-Action Concept Diagram](/assets/images/macro_action_function_def.png){: .img-medium}
 
 ---
 
@@ -45,10 +32,14 @@ We can learn the termination condition by adding it to the MAPPO. Since the term
 
 #### Continuous Macro-Actions:
 
-We assume that every continuous macro-action
+We assume that every continuous macro-action:
+
 $$ m \in \mathcal{M} \subset \mathbb{R}^d $$
+   
 can be *deterministically* decomposed into a sequence of primitive actions in each agent's primitive action set $\mathcal{A}_i \subset \mathbb{R}^k$. Concretely, there exists $(a_0, a_1, \dots, a_{\tau-1})$, where each
+
 $$ a_t \in A = \prod_{i \in I} A_i $$
+
 In this case, $\tau$ is the length of the macro-action.
 
 1.  There is a deterministic map
@@ -167,7 +158,6 @@ $$\begin{aligned}
       \nabla_{\theta}\Psi_{\theta}(m\mid h)\,Q^{\Psi_{\theta}}(h,m)
     \,dm
   }_{\text{Value\_Function}}\,dh
-\end{aligned}$$
 
 Then the gradient will be,
 
@@ -183,6 +173,4 @@ $$\begin{aligned}
 \nabla_{\theta}J(\theta) &= \int_{h\in\mathcal H}\rho^{\Psi_{\theta}}(h)\int_{\mathcal M}\Psi_{\theta}(m\mid h)\nabla_{\theta}\log\Psi_{\theta}(m\mid h)Q^{\Psi_{\theta}}(h,m)\,dm\,dh \\
 &= \mathbb{E}_{h\sim\rho^{\Psi_{\theta}}}\Bigl[\mathbb{E}_{m\sim\Psi_{\theta}(\cdot\mid h)}\bigl[\nabla_{\theta}\log\Psi_{\theta}(m\mid h)Q^{\Psi_{\theta}}(h,m)\bigr]\Bigr] \\
 &= \mathbb{E}_{h\sim\rho^{\Psi_{\theta}},\,m\sim\Psi_{\theta}}\bigl[\nabla_{\theta}\log\Psi_{\theta}(m\mid h)Q^{\Psi_{\theta}}(h,m)\bigr]
-\end{aligned}h
-&= \mathbb{E}_{h\sim\rho^{\Psi_{\theta}},\,m\sim\Psi_{\theta}}\bigl[\nabla_{\theta}\log\Psi_{\theta}(m\mid h)Q^{\Psi_{\theta}}(h,m)\bigr]
-\end{aligned}\]$$
+\end{aligned}$$
