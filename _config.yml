@@ -26,6 +26,11 @@ kramdown:
   syntax_highlighter_opts:
     disable: true
     
+collections:
+  publications:
+    output: true
+    permalink: /publications/:name/
+
 plugins:
   - jekyll-feed
   - jekyll-sitemap

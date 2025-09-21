@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "Continuous Macro Actions"
+katex: True
 tags: [Research, RL]
 ---
 ## Macro-Actions Quick Overview
@@ -16,7 +17,7 @@ Let's have an example with two rovers in a multi-agent scenario. We can assume t
 ## Notation and Function Definitions
 These are the commmon functions and notations that you would probably see in a macro-action paper. 
 
-![Macro-Action Concept Diagram](/assets/images/macro_action_function_def.png){: .img-medium}
+![Macro-Action Concept Diagram](/assets/images/macro_action_function_def.png){: .img-full}
 
 ---
 
@@ -34,9 +35,9 @@ We can learn the termination condition by adding it to the MAPPO. Since the term
 
 We assume that every continuous macro-action:
 
-$$ m \in \mathcal{M} \subset \mathbb{R}^d $$
+$$m\in\mathcal{M}\subset\mathbb{R}^d$$
    
-can be *deterministically* decomposed into a sequence of primitive actions in each agent's primitive action set $\mathcal{A}_i \subset \mathbb{R}^k$. Concretely, there exists $(a_0, a_1, \dots, a_{\tau-1})$, where each
+can be *deterministically* decomposed into a sequence of primitive actions in each agent's primitive action set $\mathcal{A}_i \subset \mathbb{R}^k$ . Concretely, there exists $(a_0, a_1, \dots, a_{\tau-1})$, where each
 
 $$ a_t \in A = \prod_{i \in I} A_i $$
 
