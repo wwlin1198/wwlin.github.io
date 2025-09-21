@@ -34,8 +34,6 @@ collections:
 plugins:
   - jekyll-feed
   - jekyll-sitemap
-    - abstract
-    - note
 
 titles_from_headings:
   strip_title: true
