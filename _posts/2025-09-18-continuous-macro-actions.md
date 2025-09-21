@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Continuous Macro Actions"
-katex: True
+katex: true
 tags: [Research, RL]
 ---
 ## Macro-Actions Quick Overview
