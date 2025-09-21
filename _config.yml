@@ -34,19 +34,6 @@ collections:
 plugins:
   - jekyll-feed
   - jekyll-sitemap
-  - jekyll-scholar
-
-scholar:
-  style: apa
-  locale: en
-  repository: _bibliography
-  bibliography: references.bib
-  replace_strings: true
-  join_strings: true
-  bibtex_filters:
-    - superscript
-    - latex
-  bibtex_skip_fields:
     - abstract
     - note
 

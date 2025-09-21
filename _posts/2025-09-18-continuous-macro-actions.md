@@ -65,7 +65,7 @@ $$ \phi : A^\tau \longrightarrow \mathcal{M}, \qquad m = \phi(a_0, a_1, \dots, a
 During execution of $m$, at each underlying step $t=0,\dots,\tau-1$, the agent executes a discrete primitive action based on the local primitive observation history $H^A_i$. The macro-observation $z$ seen at macro-termination can itself be viewed as a function of the primitive observations: $\psi: \Omega^\tau \to \mathcal{Z}$.
 
 #### Continuous macro-action as a Mac-DecPOMDP:
-A MacDec-POMDP {% cite amato2015decentralized amato2014scalable %} is defined as the tuple:
+A MacDec-POMDP [1, 2] is defined as the tuple:
 
 $$\langle I, S, A, M, \Omega, \zeta, T, R, O, Z, \mathbb{H}, \gamma \rangle$$
 
@@ -137,7 +137,7 @@ P(h'\mid h, m) &= P(z'\mid h, m)
 &= \mathbb{E}_{\tau \sim \beta_m}\,\Bigl[\gamma^{\tau}\, \mathbb{E}_{s\mid h}\bigl[\mathbb{E}_{s'\mid s,m,\tau}[\,P(z'\mid m,s')\,]\bigr]\Bigr]
 \end{aligned}$$
 
-Next, we follow the proof of the policy gradient theorem {% cite sutton2000policy %}:
+Next, we follow the proof of the policy gradient theorem [3]:
 
 $$\begin{aligned}
 \nabla_{\theta}V^{\Psi_{\theta}}(h)
@@ -200,4 +200,8 @@ $$\begin{aligned}
 
 ## References
 
-{% bibliography --cited %}
+[1] Amato, C., & Oliehoek, F. A. (2015). Scalable planning and learning for multiagent POMDPs. *Proceedings of the AAAI Conference on Artificial Intelligence*, 29(1).
+
+[2] Amato, C., Chowdhary, G., Geramifard, A., Üre, N. K., & Kochenderfer, M. J. (2014). Decentralized control of partially observable Markov decision processes. In *52nd IEEE Conference on Decision and Control* (pp. 2398-2405).
+
+[3] Sutton, R. S., McAllester, D., Singh, S., & Mansour, Y. (2000). Policy gradient methods for reinforcement learning with function approximation. *Advances in neural information processing systems*, 12.
