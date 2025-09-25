@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "Continuous Macro Actions"
+katex: true
 tags: [Research, RL]
 ---
 ## Macro-Actions Quick Overview
@@ -16,7 +17,24 @@ Let's have an example with two rovers in a multi-agent scenario. We can assume t
 ## Notation and Function Definitions
 These are the commmon functions and notations that you would probably see in a macro-action paper. 
 
-![Macro-Action Concept Diagram](/assets/images/macro_action_function_def.png){: .img-medium}
+$$
+\begin{aligned}
+Q^{\theta_i}_{\phi_i}(h_i, m_i) \quad & \text{is the decentralized critic} \\
+Q^{\vec{\Psi}}_{\phi}(\vec{h}, \vec{m}) \quad & \text{is the centralized critic} \\
+\Psi_{\theta_i}(m_i \mid h_i) \quad & \text{is the macro-action-based policy and is the individual actor} \\
+\Psi_{\theta}(\vec{m} \mid \vec{h}) \quad & \text{is the centralized actor or joint macro-action-based policy} \\
+V^{\Psi_{\theta_i}}_{\mathbf{w}_i}(h_i) \quad & \text{is the local history value function or critic} \\
+V^{\Psi_{\theta}}_{\mathbf{w}}(\vec{h}) \quad & \text{is the centralized history value function or critic} \\
+V^{\vec{\Psi}_{\theta_i}}_{\mathbf{w}_i}(\vec{h}_i) \quad & \text{is the separate centralized critic used in MAPPO} \\
+r_i^c \quad & \text{is the cumulative-discounted reward of the macro-action taking } \tau_{mi} \text{ time steps} \\
+Q_{\phi_i}(h_i, m_i) \quad & \text{is the individual macro-action-value function} \\
+Q_{\phi_i}(\vec{h}_i, \vec{m}_i) \quad & \text{is the joint macro-action value function} \\
+x \quad & \text{represents the available centralized information} \\
+\vec{A} \quad & \text{advantage calculated using centralized information using GAE} \\
+\alpha \quad & \text{is the positive coefficient for clipping function} \\
+\beta \quad & \text{is the negative coefficient for the clipping function}
+\end{aligned}
+$$
 
 ---
 
@@ -34,21 +52,20 @@ We can learn the termination condition by adding it to the MAPPO. Since the term
 
 We assume that every continuous macro-action:
 
-$$ m \in \mathcal{M} \subset \mathbb{R}^d $$
+$$m\in\mathcal{M}\subset\mathbb{R}^d$$
    
-can be *deterministically* decomposed into a sequence of primitive actions in each agent's primitive action set $\mathcal{A}_i \subset \mathbb{R}^k$. Concretely, there exists $(a_0, a_1, \dots, a_{\tau-1})$, where each
+can be *deterministically* decomposed into a sequence of primitive actions in each agent's primitive action set $\mathcal{A}_i \subset \mathbb{R}^k$ . Concretely, there exists $(a_0, a_1, \dots, a_{\tau-1})$, where each
 
 $$ a_t \in A = \prod_{i \in I} A_i $$
 
-In this case, $\tau$ is the length of the macro-action.
+In this case, $\tau$ is the length of the macro-action. There is a deterministic map
 
-1.  There is a deterministic map
-    $$ \phi : A^\tau \longrightarrow \mathcal{M}, \qquad m = \phi(a_0, a_1, \dots, a_{\tau-1}) $$
-2.  During execution of $m$, at each underlying step $t=0,\dots,\tau-1$, the agent executes a discrete primitive action based on the local primitive observation history $H^A_i$.
-3.  The macro-observation $z$ seen at macro-termination can itself be viewed as a function of the primitive observations: $\psi: \Omega^\tau \to \mathcal{Z}$.
+$$ \phi : A^\tau \longrightarrow \mathcal{M}, \qquad m = \phi(a_0, a_1, \dots, a_{\tau-1}) $$
+
+During execution of $m$, at each underlying step $t=0,\dots,\tau-1$, the agent executes a discrete primitive action based on the local primitive observation history $H^A_i$. The macro-observation $z$ seen at macro-termination can itself be viewed as a function of the primitive observations: $\psi: \Omega^\tau \to \mathcal{Z}$.
 
 #### Continuous macro-action as a Mac-DecPOMDP:
-A MacDec-POMDP \cite{amato_planning_nodate,amato_planning_2014} is defined as the tuple:
+A MacDec-POMDP [1, 2] is defined as the tuple:
 
 $$\langle I, S, A, M, \Omega, \zeta, T, R, O, Z, \mathbb{H}, \gamma \rangle$$
 
@@ -68,17 +85,19 @@ $$V^{\vec{\Psi}}(s_{(0)}) = \mathbb{E}\!\left[\sum_{t=0}^{\mathbb{H}-1} \gamma^t
 
 where $\gamma \in [0,1]$ is the discount, and $\mathbb{H}$ is the number of time steps until the problem terminates. 
 
-The idea is that it will randomly choose an ending point at some time step $t | h$. Learning policy over m as well as policy over b. Or say that previously it is predefined but now we assume it is not. Write as two seperate functions or as one thing. Answer when do I learn the termination function and when do I learn the other one? What would be the value if i stopped vs continued.
+The idea is that it will randomly choose an ending point at some time step $t \mid h$. Learning policy over m as well as policy over b. I could say that previously it is predefined but now we assume it is not. I could write as two seperate functions or as one thing. I am not sure yet. When do I learn the termination function and when do I learn the other one? What would be the value if I stopped vs continued. These topics need to be explored more in the future. 
 
 When the option terminates (at primitive step $\tau_i$), there will be a new *macro-observation* $z^i$ via
-$$ Z_i\bigl(z^i\mid m^i,\,s_{\tau_i}\bigr) = P\bigl(z^i\mid h^i_{\tau_i},m^i\bigr) $$
+
+$$Z_i\bigl(z^i\mid m^i,\,s_{\tau_i}\bigr) = P\bigl(z^i\mid h^i_{\tau_i},m^i\bigr)$$
+
 and its high-level macro-action observation history $h^i\in H^M_i$.
 
 Under these definitions, we will have the high-level policy
-$$ \Psi_i\,(m^i\mid h^i),\quad m^i\in M_i $$
-becoming the density over options.
 
----
+$$\Psi_i\,(m^i\mid h^i),\quad m^i\in M_i$$
+
+becoming the density over options.
 
 ## Problems?
 
@@ -109,7 +128,7 @@ $$ Q^{\Psi}(h, m) = r^c(h, m) + \int_{h'} P(h'\mid h, m)\, V^{\Psi}(h')\, dh' $$
 
 where,
 
-$$ r^c(h, m) = \mathbb{E}_{\tau \sim \beta_m,\ s\mid_{t_m}}\biggl[\sum_{t=t_m}^{t_m+\tau-1} \gamma^t r_t\biggr] $$
+$$ r^c(h, m) = \mathbb{E}_{\tau \sim \beta_m, s\mid_{t_m}}\biggl[\sum_{t=t_m}^{t_m+\tau-1} \gamma^t r_t\biggr] $$
 
 $$\begin{aligned}
 P(h'\mid h, m) &= P(z'\mid h, m)
@@ -118,7 +137,7 @@ P(h'\mid h, m) &= P(z'\mid h, m)
 &= \mathbb{E}_{\tau \sim \beta_m}\,\Bigl[\gamma^{\tau}\, \mathbb{E}_{s\mid h}\bigl[\mathbb{E}_{s'\mid s,m,\tau}[\,P(z'\mid m,s')\,]\bigr]\Bigr]
 \end{aligned}$$
 
-Next, we follow the proof of the policy gradient theorem (Sutton et al. 2000):
+Next, we follow the proof of the policy gradient theorem [3]:
 
 $$\begin{aligned}
 \nabla_{\theta}V^{\Psi_{\theta}}(h)
@@ -159,6 +178,8 @@ $$\begin{aligned}
     \,dm
   }_{\text{Value\_Function}}\,dh
 
+\end{aligned}$$
+
 Then the gradient will be,
 
 $$\begin{aligned}
@@ -167,10 +188,20 @@ $$\begin{aligned}
 &= \int_{h\in\mathcal H} \rho^{\Psi_{\theta}}(h) \int_{\mathcal M} \nabla_{\theta}\Psi_{\theta}(m\mid h) Q^{\Psi_{\theta}}(h,m)\, dm\, dh
 \end{aligned}$$
 
-Where $\rho^{\Psi_{\theta}}(h)$ represents the discounted state visitation distribution under policy $\Psi_{\theta}$. Applying the log derivative trick $\nabla_{\theta}\Psi_{\theta}(m|h) = \Psi_{\theta}(m|h)\nabla_{\theta}\log\Psi_{\theta}(m|h)$:
+Where $\rho^{\Psi_{\theta}}(h)$ represents the discounted state visitation distribution under policy $\Psi_{\theta}$. Applying the log derivative trick $\nabla_{\theta}\Psi_{\theta}(m\mid h) = \Psi_{\theta}(m\mid h)\nabla_{\theta}\log\Psi_{\theta}(m\mid h)$:
 
 $$\begin{aligned}
 \nabla_{\theta}J(\theta) &= \int_{h\in\mathcal H}\rho^{\Psi_{\theta}}(h)\int_{\mathcal M}\Psi_{\theta}(m\mid h)\nabla_{\theta}\log\Psi_{\theta}(m\mid h)Q^{\Psi_{\theta}}(h,m)\,dm\,dh \\
 &= \mathbb{E}_{h\sim\rho^{\Psi_{\theta}}}\Bigl[\mathbb{E}_{m\sim\Psi_{\theta}(\cdot\mid h)}\bigl[\nabla_{\theta}\log\Psi_{\theta}(m\mid h)Q^{\Psi_{\theta}}(h,m)\bigr]\Bigr] \\
 &= \mathbb{E}_{h\sim\rho^{\Psi_{\theta}},\,m\sim\Psi_{\theta}}\bigl[\nabla_{\theta}\log\Psi_{\theta}(m\mid h)Q^{\Psi_{\theta}}(h,m)\bigr]
 \end{aligned}$$
+
+---
+
+## References
+
+[1] Amato, C., & Oliehoek, F. A. (2015). Scalable planning and learning for multiagent POMDPs. *Proceedings of the AAAI Conference on Artificial Intelligence*, 29(1).
+
+[2] Amato, C., Chowdhary, G., Geramifard, A., Üre, N. K., & Kochenderfer, M. J. (2014). Decentralized control of partially observable Markov decision processes. In *52nd IEEE Conference on Decision and Control* (pp. 2398-2405).
+
+[3] Sutton, R. S., McAllester, D., Singh, S., & Mansour, Y. (2000). Policy gradient methods for reinforcement learning with function approximation. *Advances in neural information processing systems*, 12.

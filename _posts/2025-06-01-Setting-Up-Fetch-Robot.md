@@ -8,8 +8,8 @@ tags: [Robotics, Setup]
 Currently there is not much documentation on the Fetch Robot that still uses 14.04 as it has migrated over to 18.04 melodic. There is no longer support after melodic as the company has been acquired by Zebra. You will also find that the fetch robot website no longer is active and the documentation website is not hosted and they moved it to: [https://fetchrobotics.github.io/docs/](https://fetchrobotics.github.io/docs/). 
 
 ### Dependencies
-- OpenRave 0.9 (Motion Planing with MoveIt! in 14.04 is very rough and glitches a lot)
-- FCL (Flexible Collision Library)
+- OpenRave 0.9 (Motion Planing with MoveIt! in 14.04 is very rough and glitches a lot) Guide [https://scaron.info/robotics/installing-openrave-on-ubuntu-14.04.html](https://scaron.info/robotics/installing-openrave-on-ubuntu-14.04.html)
+- FCL 0.5.0 (Flexible Collision Library)
 - Fetch Robot Packages [https://github.com/orgs/ZebraDevs/repositories?q=fetch](https://github.com/orgs/ZebraDevs/repositories?q=fetch)
 - Multimaster Fkie - This is the best way to run scripts on the fetch as the computer on the fetch is not powerful. Keep in mind that GPUs and CPUs that support 14.04 stops at 1080 generation. 20 series cards and newer won't work with 14.04.  
 
@@ -48,4 +48,4 @@ servers to not work
 To fix most of the errors, make sure that the hostnames are register in /etc/hosts
 
 #### Other Errors
-I found that ChatGPT does help solve a lot of package installing errors if you specify that you are using openrave 0.9, ubuntu 14.04, ROS Indigo.
+I found that ChatGPT does help solve a lot of package installing errors if you specify that you are using openrave 0.9, ubuntu 14.04, ROS Indigo. The other error causing it to not work would most likely be symlink errors. 
