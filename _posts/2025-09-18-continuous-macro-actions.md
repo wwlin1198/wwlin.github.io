@@ -153,10 +153,7 @@ $$A^{m_i}_i = \sum_{t=t_{m_i}}^{t_{m_i} + T_{m_i} - 1} \gamma^{t - t_{m_i}} \del
 
 $$\delta_{t}^i = r_i^c + \gamma^{\vec{\tau}_{\vec{m_i}}} V_{w_i}^{\vec{\psi}}(x') - V_{w_i}^{\vec{\psi}}(x) \quad$$
 
-As you can see, it is very similar to the IPPO actor update but we have the centralized critic with centralized history information rather than local history information in the advantage estimate. This makes it CTDE.
-
-
-
+As you can see, it is very similar to the IPPO actor update but we have the centralized critic with centralized history information rather than local history information in the advantage estimate. This makes it CTDE. This concludes the discrete macro-action section and start the new section that has not been formally introduced yet which is the concept of continuous macro-actions.
 
 
 
