@@ -7,12 +7,43 @@ tags: [Research, RL]
 ## Macro-Actions Quick Overview
 
 ## What is a Macro-Action
-A macro-action is essentially a high-level action. The main purpose of a macro-action is for robots to have the ability to asynchronously learn to collaborate with another through a multi-agent reinforcement learning lens. It is more formally defined in the Continuous macro-action as a Mac-DecPOMDP section.
+A macro-action is essentially a high-level action. It is based off the options framework and is essentially hierarchical reinforcement learning [4]. The options framework is temporally extracted actions like "skills/macros" in the single agent case. Macro-actions which can be also called options are an extension of that by framing it as a Dec-POMDP problem which makes it multi-agent. This is formally coined as a MacDec-POMDP. Options, however, are synchronous and agents need to be homogeneous. We are learning high-level policies over macro-actions which maps histories to macro-actions. A macro-action allows agents to have the ability to asynchronously learn to collaborate with another through a multi-agent reinforcement learning lens. The macro-action is defined as $m = \langle \beta_m, I_m, \pi_m \rangle$ (based off the options framework). $\beta_m$ is the stochastic termination condition where at each history conditioned on the observation, there is a chance for the macro-action to terminate. $I_m$ is the initiation set that needs to be met from the macro-observation-history for the macro-action to start. $\pi_m$ is the low-level policy ran to successfully execute the macro-action. 
 
-## Continuous Macro Actions 
-Writing Research paper on extending Macro-Actions to the continuous case. The main idea is that currently there is no formal definition for a continuous macro-action. The purpose of the continuous macro-action is similar to the reason for a continuous action; scalability. Let's take an example of a mars rover exploring scientific points of interests. Instead of the discrete macro-action "go-to-point-A" it would be "go-to-location-(coordinates)". This means that the macro-action is now a parameter (coordinates) that can be learned. The reason why we need continuous macro-action is for more realistic and refined control. 
+To recap, the reason why we use macro-actions is for a way to represent agent coordination in a more simple and realistic manner. In the real world, robots/agents are not all homogenous and they are never synchronized to finish their task at the exact same time. So, the main difference between options and macro-action is the fact that we are now solving a Dec-POMDP rather than a POMDP, allow for macro-actions that run for different timesteps, allow for asynchronous execution, reduces complexity of planning in long horizon tasks, and improve agent collaboration. Moreover, macro-actions that build on top of other macro-actions would allow for more complex hierarchical planning as well.
 
-Let's have an example with two rovers in a multi-agent scenario. We can assume they are homogenous agents with their macro-action/action space being the same. In this case, if both agents take the action to "go-to-point-A" and point A is this predefined position, it would collide with each other as they are trying to go to the same point and collect the same data. In the continuous case, they would be able to figure out they need to be side by side with one another or on opposite sides. In this case, they could both be at point A without collision of duplicate observations from the rover/agent's perspective. More to be explained in later section. 
+A MacDec-POMDP [1, 2] is defined as the tuple:
+
+$$\langle I, S, A, M, \Omega, \zeta, T, R, O, Z, \mathbb{H}, \gamma \rangle$$
+
+The tuple $\langle I, S, A, \Omega, O, R \rangle$ in MacDec-POMDP are from the definition of Dec-POMDP.
+
+$I$ represents a set of agents;
+
+$S$ defines the environmental state space;
+
+$A = \prod_{i \in I} A_i$ denotes the combined primitive-action space, from each agent's individual primitive-action set $A_i$;
+
+$M = \prod_{i \in I} M_i$ indicates the joint macro-action space, comprising each agent's macro-action space $M_i$;
+
+$\Omega = \prod_{i \in I} \Omega_i$ describes the joint primitive-observation space, combining each agent's primitive-observation set $\Omega_i$;
+
+$ Z = \prod_{i \in I} Z_i$ represents the joint macro-observation space, which combines each agent's macro-observation space $\zeta_i$;
+
+$T(s, \vec{a}, s') = P(s' \mid s, \vec{a})$ explains the environment transition dynamics;
+
+$R(s, \vec{a})$ serves as the global reward function. Reward comes from the underlying ground truth environment state.
+
+$\mathbb{H}$ is the horizon;
+
+$\gamma$ is the discount variable.
+
+When using macro-actions, each agent independently selects a macro-action based on the high level policy and collects a macro-observation. The objective of solving MacDec-POMDPs with a finite horizon is finding a joint high-level policy $\vec{\Psi} = \prod_{i \in I} \Psi_i$ that maximizes the value:
+
+$$V^{\vec{\Psi}}(s_{(0)}) = \mathbb{E}\!\left[\sum_{t=0}^{\mathbb{H}-1} \gamma^t\, r\!\left(s_{(t)}, \vec{a}_{(t)}\right) \;\middle|\; s_{(0)}, \vec{\pi}, \vec{\Psi}\right]$$
+
+where $\gamma \in [0,1]$ is the discount, and $\mathbb{H}$ is the number of time steps until the problem terminates. It is important to note that there is no individual reward/credit assignment in a MacDec-POMDP or Dec-POMDP. It only uses a team reward which promotes collaboration as each agent's actions will affect the team reward and we are maximizing the overall team reward. The problem when there are individual rewards is called a POSG (partially observable stochastic game) [9]. You could solve solve a POSG using a formulation with POMDP because a single agent POSG can be modeled as a POMDP. However, since games like chess are two-agents, it would need further techniques to make this work. Since POSG is not the main topic here, I will not talk more about it.
+
+---
 
 ## Notation and Function Definitions
 These are the commmon functions and notations that you would probably see in a macro-action paper. 
@@ -38,6 +69,44 @@ $$
 
 ---
 
+## Discrete Macro-Actions
+Currently, most research is on discrete macro-actions where we assume that the macro-action it self is a discrete high-level action such as "go-to-point-A" or "go-to-kitchen" [5,6,7,8]. The low level policy/controller will then run the primitive actions or trajectory planner that will achieve that goal. As many can realize, this is a form of hierarchical reinforcement learning. I will discuss about the continuous extension briefly in the later sections. For this section, I will focus mostly on current macro-action algorithms from my knowledge. I am fairly confident the following are 90%+ of all the current macro-action algorithms. 
+
+### Early Work (2014-2017)
+
+First, I will talk about the solution is MacDec-POMDP which I briefly mentioned above. The solution maps option/macro-action histories to macro-actions. An option/macro-option history is formally defined as $h^M_{i} = (z^0_i, m^1_i,..., z^{t-1}_i, m^{t-1}_i)$ where $M$ is the macro-action and $i$ is the agent number. It is important to note here that we are counting the number of macro-actions as each macro-action can be different number of primitive time steps depending on the low-level/sub policy. The stochastic policy of each agent using macro-action is then defined as $\mu_i: H_i^M \times M_i \to [0, 1]$ which depends on the joint observation and joint policy $\mu$. Then the goal would be to maximize the joint high-level policy as stated above in the first section. 
+
+An early solution of finding the optimal high-level policy or macro-action policy is using dynamic programming called Option-based Dynamic Programming (O-DP)[11]. This algorithm finds all possible combinations of macro-actions and chooses the best combination for the policy that returns the highest reward. This idea is then extended in Memory-bounded dynamic programming (MBDP) which does the same search but only retaining the best performing decision trees. Additionally, Option-based DIrect Cross Entropy (O-DICE) can also be used where it searches through the space of policy trees through sampling. It retains sampling distributions at each joint history and then evaluates them to get $V(h)$ so the best predefined number of policies are kept and worse ones removed.
+
+These early solutions have policies as policy trees so the next extension of these algorithms is to represent them as finite-state controllers to be used in robotics [12]. The motivation for this extension is that finite-state controllers are easier to understand and much simpler than policy trees. The important part is that these finite-state controllers allow for infinite horizon planning as policy trees require the agent to remember the entire history which creates a memory problem when the horizon is infinite (needing infinite memory). Since this is modeled as a macro-action level, it only cares about the outcome of the macro-action and doesn't care about the low-level execution. This greatly reduces the planning complexity because it doesn't need to worry about all the possible trajectories and just chooses one. Then, it generates controllers for robots that maximizes the team reward. The planning algorithm that is able to do this is called MacDec-POMDP Heuristic Search (MDHS). The mathematical proofs for these simple algorithms will be omitted but can be seen in the papers referenced.
+
+### Recent Work (2017+)
+
+More recently, we have better performing algorithms for this problem through the use of more modern reinforcement learning algorithms. These algorithms are from the single agent case but extended to the multi-agent case with macro-actions and provides a more principled way to solve the MacDec-POMDP problem compared to the brute force methods discussed previously. I will separate this to value-based methods and policy-gradient based methods. Moreover, these algorithms take advantage of the popular Centralized Training and Decentralized Execution (CTDE) paradigm. To explain CTDE briefly, we have centralized training and execution (CTE), decentralized training and execution (DTE), and CTDE. In CTE, the agents can all be representing as if it is one agent and is not any different from the single agent case aside from having joint observations and actions. This means that all the agents have information from the other agents as well. The DTE case differs as each agent acts independently and each have their own critic and actor and acts without any centralized information. CTDE combines both where in the training phase, information from all the agents can be used (in the centralized critic) in addition to any other underlying information if wanted but during execution, the agent only takes in its own local observations and executes its own actions (individual actors). 
+
+An important addition in recent methods is the form of memory called Macro-Action Concurrent Experience Replay Trajectories (Mac-CERTS) and Macro-Action Joint Experience Replay (Mac-JERTs) [5]. These hold the individual and joint history information including the time information. Since macro-actions have varying timesteps until completion, we would discount by the number of macro-actions rather than at a certain timestep. So, through squeezing in Mac-JERTS and Mac-CERTS, we can record down when each macro-observation-history correctly to be used in more traditional reinforcement learning methods.  
+
+
+#### Value-Based Methods
+
+This idea is introduced along with the Deep Q-Networks (DQN)/ Deep Reccurrent Q-Networks (DRQN) extension to macro-actions [13,14]. To explain briefly, DQN is a popular value-based method to update the policy $\pi$ by iteratively updating the action-value function, $Q(s,a)$. To extend DQN to the partially observable case, recurrent networks are introduced to remember some history of actions which is called DRQN. The algorithms for macro-actions are called  Macro-Action Based Decentralized Multi-Agent Hysteretic Deep Recurrent Q-Networks (MacDec-MAHDRQN) and  Macro-Action Based Decentralized Multi-Agent Hysteretic Double Deep Recurrent Q-Networks (MacDec-MAHDDRQN). These algorithms extend the previous ones mentioned to the macro-action case and also adds on the idea of hysteretic q-learning and double q-learning [15,16]. Hysteretic Q-learning is the same as traditional Q learning except we have an $\alpha$ and $\beta$ values where we use $\alpha$ which is the normal learning rate when our TD error is positive and $\beta$ when the TD error is negative. The basic idea is that negative TD error can be caused by another agent in the environment doing exploration and not domain stochasticity to avoid local optima in certain domains. So we want to use this to make each agent robust against negatively updating due to teammate mistakes/exploration. Afterall, other agents performing their policies in the environment causes the problem to be non-stationary in the local agent's perspective learning in a decentralized manner with partially observability.  
+
+
+#### Policy-Gradient Methods
+
+Next, we have policy-gradient based methods. These methods include Macro-Action Based Independent Actor Critic (Mac-IAC), Macro-Action Based Centralized Actor Critic (Mac-CAC), Macro-Action Based Independent Actor Independent Centralized Critic (Mac-IAICC), Macro-Action Based Multi-Agent Proximal Policy Optimization (Mac-MAPPO), and Macro-Action Based Independent Proximal Policy Optimiation(Mac-IPPO). 
+
+---
+
+
+
+## Continuous Macro Actions 
+Writing research paper on extending Macro-Actions to the continuous case. The main idea is that currently there is no formal definition for a continuous macro-action. The purpose of the continuous macro-action is similar to the reason for a continuous action; scalability. Let's take an example of a mars rover exploring scientific points of interests. Instead of the discrete macro-action "go-to-point-A" it would be "go-to-location-(coordinates)". This means that the macro-action is now a parameter (coordinates) that can be learned. The reason why we need continuous macro-action is for more realistic and refined control. 
+
+Let's have an example with two rovers in a multi-agent scenario. We can assume they are homogenous agents with their macro-action/action space being the same. In this case, if both agents take the action to "go-to-point-A" and point A is this predefined position, it would collide with each other as they are trying to go to the same point and collect the same data. In the continuous case, they would be able to figure out they need to be side by side with one another or on opposite sides. In this case, they could both be at point A without collision of duplicate observations from the rover/agent's perspective. More to be explained in later section. 
+
+
+
 ## Parameterized/Continuous Macro-Action
 
 **Reason/Motivation:** It is mainly for scalability. If we use discrete macro-actions, and it is not parameterized, then for any large grid world, we would have a problem because it would be length × width amount of macro-actions to get to every point on the grid (same way of why we use continuous actions). With continuous macro-actions, we could solve that because we can learn the macro action that gets to where we want without having to store all the discrete macro-actions. This could translate to real-world control problems with robotics. There are many examples out there already on robots learning high-level actions in a hierarchical manner so they are able to collaborate with one another. What we are doing here is formalizing that in a MARL manner as a multi-agent way to do multi-robot collaboration in the real world.
@@ -54,7 +123,7 @@ We assume that every continuous macro-action:
 
 $$m\in\mathcal{M}\subset\mathbb{R}^d$$
    
-can be *deterministically* decomposed into a sequence of primitive actions in each agent's primitive action set $\mathcal{A}_i \subset \mathbb{R}^k$ . Concretely, there exists $(a_0, a_1, \dots, a_{\tau-1})$, where each
+can be *deterministically* decomposed into a sequence of primitive actions in each agent's primitive action set $\mathcal{A}\_i \subset \mathbb{R}^k$. Concretely, there exists $(a\_0, a\_1, \dots, a\_{\tau-1})$, where each
 
 $$ a_t \in A = \prod_{i \in I} A_i $$
 
@@ -65,25 +134,7 @@ $$ \phi : A^\tau \longrightarrow \mathcal{M}, \qquad m = \phi(a_0, a_1, \dots, a
 During execution of $m$, at each underlying step $t=0,\dots,\tau-1$, the agent executes a discrete primitive action based on the local primitive observation history $H^A_i$. The macro-observation $z$ seen at macro-termination can itself be viewed as a function of the primitive observations: $\psi: \Omega^\tau \to \mathcal{Z}$.
 
 #### Continuous macro-action as a Mac-DecPOMDP:
-A MacDec-POMDP [1, 2] is defined as the tuple:
 
-$$\langle I, S, A, M, \Omega, \zeta, T, R, O, Z, \mathbb{H}, \gamma \rangle$$
-
-The tuple $\langle I, S, A, \Omega, O, R \rangle$ in MacDec-POMDP are from the definition of Dec-POMDP.
-$I$ represents a set of agents;
-$S$ defines the environmental state space;
-$A = \prod_{i \in I} A_i$ denotes the combined primitive-action space, from each agent's individual primitive-action set $A_i$;
-$M = \prod_{i \in I} M_i$ indicates the joint macro-action space, comprising each agent's macro-action space $M_i$;
-$\Omega = \prod_{i \in I} \Omega_i$ describes the joint primitive-observation space, combining each agent's primitive-observation set $\Omega_i$;
-$\zeta = \prod_{i \in I} \zeta_i$ represents the joint macro-observation space, which combines each agent's macro-observation space $\zeta_i$;
-$T(s, \vec{a}, s') = P(s' \mid s, \vec{a})$ explains the environment transition dynamics;
-$R(s, \vec{a})$ serves as the global reward function.
-
-When using macro-actions, each agent independently selects a macro-action based on the high level policy and collects a macro-observation. The objective of solving MacDec-POMDPs with a finite horizon is finding a joint high-level policy $\vec{\Psi} = \prod_{i \in I} \Psi_i$ that maximizes the value:
-
-$$V^{\vec{\Psi}}(s_{(0)}) = \mathbb{E}\!\left[\sum_{t=0}^{\mathbb{H}-1} \gamma^t\, r\!\left(s_{(t)}, \vec{a}_{(t)}\right) \;\middle|\; s_{(0)}, \vec{\pi}, \vec{\Psi}\right]$$
-
-where $\gamma \in [0,1]$ is the discount, and $\mathbb{H}$ is the number of time steps until the problem terminates. 
 
 The idea is that it will randomly choose an ending point at some time step $t \mid h$. Learning policy over m as well as policy over b. I could say that previously it is predefined but now we assume it is not. I could write as two seperate functions or as one thing. I am not sure yet. When do I learn the termination function and when do I learn the other one? What would be the value if I stopped vs continued. These topics need to be explored more in the future. 
 
@@ -205,3 +256,30 @@ $$\begin{aligned}
 [2] Amato, C., Chowdhary, G., Geramifard, A., Üre, N. K., & Kochenderfer, M. J. (2014). Decentralized control of partially observable Markov decision processes. In *52nd IEEE Conference on Decision and Control* (pp. 2398-2405).
 
 [3] Sutton, R. S., McAllester, D., Singh, S., & Mansour, Y. (2000). Policy gradient methods for reinforcement learning with function approximation. *Advances in neural information processing systems*, 12.
+
+[4] R. Sutton, D. Precup, and S. Singh. Between MDPs and semi-MDPs: A framework for temporal abstraction in reinforcement learning. Artificial Intelligence, 112:181–211, 1999.
+
+[5] Xiao, Y., Hoffman, J., and Amato, C. Macro-action-based deep multi-agent reinforcement learning. In Conference on Robot Learning (CORL), pp. 1146–1161, 2020a.
+
+[6] Xiao, Y., Hoffman, J., Xia, T., and Amato, C. Learning multi-robot decentralized macro-action-based policies via a centralized Q-net. In IEEE International Conference on Robotics and Automation (ICRA), pp. 10695–10701, 2020b.
+
+[7] Xiao, Y., Tan, W., and Amato, C. Asynchronous actor-critic for multi-agent reinforcement learning. In Advances in Neural Information Processing Systems (NeurIPS), 2022.
+
+[8] Jung, Whiyoung, et al. "Agent-Centric Actor-Critic for Asynchronous Multi-Agent Reinforcement Learning." Forty-second International Conference on Machine Learning, 2025.
+
+[9] Hansen, E. A., Bernstein, D. S., & Zilberstein, S. (2004). Dynamic programming for partially observable stochastic games. In Proceedings of the 19th National Conference on Artificial Intelligence (AAAI-04) (pp. 709-715).
+
+[10] Amato, C., Konidaris, G., and Kaelbling, L. P. Planning with macro-actions in decentralized POMDPs. In International Conference on Autonomous Agents and Multiagent Systems (AAMAS), pp. 1273–1280, 2014.
+
+[11] Amato, C., Konidaris, G., Kaelbling, L. P., and How, J. P. Modeling and planning with macro-actions in decentralized POMDPs. Journal of Artificial Intelligence Research, 64:817–859, 2019.
+
+[12] Amato C, Konidaris G, Anders A, Cruz G, How JP, Kaelbling LP. Policy search for multi-robot coordination under uncertainty. The International Journal of Robotics Research. 2016 Dec;35(14):1760-78.
+
+[13] Mnih, V., Kavukcuoglu, K., Silver, D. et al. Human-level control through deep reinforcement learning. Nature 518, 529–533 (2015). https://doi.org/10.1038/nature14236
+
+[14] Hausknecht, Matthew J., and Peter Stone. "Deep Recurrent Q-Learning for Partially Observable MDPs." AAAI fall symposia. Vol. 45. 2015.
+
+[15] L. Matignon, G. J. Laurent and N. Le Fort-Piat, "Hysteretic Q-learning : an algorithm for Decentralized Reinforcement Learning in Cooperative Multi-Agent Teams," 2007 IEEE/RSJ International Conference on Intelligent Robots and Systems, San Diego, CA, USA, 2007, pp. 64-69, doi: 10.1109/IROS.2007.4399095.
+keywords: {Hysteresis;Learning;Robot kinematics;Multiagent systems;Distributed control;Convergence;Stochastic processes;Game theory;Intelligent robots;USA Councils}, 
+
+[16] Van Hasselt, Hado, Arthur Guez, and David Silver. "Deep reinforcement learning with double q-learning." Proceedings of the AAAI conference on artificial intelligence. Vol. 30. No. 1. 2016.
