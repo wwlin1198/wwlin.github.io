@@ -35,6 +35,7 @@ plugins:
   - jekyll-feed
   - jekyll-sitemap
 
+
 titles_from_headings:
   strip_title: true
   collections: true
@@ -42,6 +43,6 @@ titles_from_headings:
 defaults:
   - scope:
       path: ""
-      type: post
+      type: posts
     values:
       tags: Other

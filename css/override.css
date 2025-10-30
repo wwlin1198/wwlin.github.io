@@ -108,3 +108,26 @@ hr {
 .code-block-container .hljs-variable {
     color: #90EE90; /* Light Green for variables */
 }
+
+/* Button styles */
+.btn {
+  display: inline-block;
+  padding: 0.55em 1.1em;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  font-weight: 600;
+  text-decoration: none !important;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background-color: transparent;
+  color: #2a7ae2 !important;
+  border-color: #2a7ae2;
+}
+
+.btn-primary:hover {
+  background-color: transparent;
+  color: #1f64bb !important;
+  border-color: #1f64bb;
+}
