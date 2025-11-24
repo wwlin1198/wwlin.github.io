@@ -6,9 +6,9 @@ title: "Using the Turtlebot2 Robot in ROS Melodic"
 ## Using the Turtlebot2 Robot in ROS Melodic
 
 ### Turtlebot2 Setup
-This is to document how I setup and ran the turtlebot2 with ROS Melodic (18.04). I was still using ROS1 but I will include ROS2 but it will be the same as the github that I have found. 
+This is to document how I setup and ran the turtlebot2 with ROS Melodic (18.04). I was still using ROS1 but I will include ROS2 but it will be the same as the github that I have found. In ROS Melodic, for multi-agent communication to work we need the Multi-Master Fkie package so we have have multiple master nodes and for ROS messages to be sent between them. Since there isn't an availiable LiDaR sensor, we can use depthimage_to_laser package to convert our depth image taken by the realsense and also astra camera that we have to 2D Map. The cameras were last calibrated in September 2025 and should try to calibrate it once a year to maintain accuracy when using SLAM. 
 
-PLEASE HAVE FETCH CONNECTED THROUGH ETHERNET IF BASE IS NOT NEEDED AS IT LOSES CONNECTION IF IT IS ON WIFI IF NOT ACTIVELY USED DURING DEVELOPMENT
+PLEASE HAVE FETCH ROBOT CONNECTED THROUGH ETHERNET IF BASE IS NOT NEEDED AS IT LOSES CONNECTION IF IT IS ON WIFI IF NOT ACTIVELY USED DURING DEVELOPMENT
 
 
 #### Preliminaries
@@ -19,7 +19,12 @@ This is the main GitHub packages link you need: [https://github.com/gaunthan/Tur
 
 This is the astra camera packages if you are using the astra camera: [https://github.com/orbbec/ros_astra_camera](https://github.com/orbbec/ros_astra_camera)
 
-This is the realsense camera package installation tutorial if you have a realsense camera:[https://github.com/IntelRealSense/realsense-ros/wiki/SLAM-with-D435i](https://github.com/IntelRealSense/realsense-ros/wiki/SLAM-with-D435i)  
+This is the realsense camera package installation tutorial if you have a realsense camera:[https://github.com/IntelRealSense/realsense-ros/wiki/SLAM-with-D435i](https://github.com/IntelRealSense/realsense-ros/wiki/SLAM-with-D435i) and this tutorial was used to get it working [https://intel.github.io/robot_devkit_doc/pages/rs_slam.html](https://intel.github.io/robot_devkit_doc/pages/rs_slam.html).
+
+
+#### Common Problems
+
+It is pretty common for the robot to not turn 90 degrees when you code it to turn 90 degrees. Make sure that the robot is calibrated and there is a turtlebot2 calibration package for the odometry and gyro. This helps but since our robots are extremely old, the calibration often times doesn't correct it by much or even work. I circumvented this by manually calibrating the wheels each day in software by changing the wheel separation and radius numbers. I also changed the speed if needed. 
 
 #### Running the Turtlebots with Multi Master Fkie
 Maybe Confusing Commands:
