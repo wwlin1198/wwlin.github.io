@@ -1,6 +1,6 @@
 ---
 layout: publication
-title: ""
+title: "Beware Untrusted Simulators -- Reward-Free Backdoor Attacks in Reinforcement Learning"
 authors: "Ethan Rathbun, Wo Wei Lin, Alina Oprea, Christopher Amato"
 venue: "ICLR"
 year: 2026
