@@ -3,15 +3,25 @@ layout: default
 ---
 
 <div class="home">
-  {%- if page.title -%}
-    <h1 class="page-heading">{{ page.title }}</h1>
-  {%- endif -%}
 
-  {{ content }}
+  <section class="about-section">
+    <img src="{{ '/assets/images/profile_pic.jpg' | relative_url }}" alt="Wo Wei Lin" class="profile-img">
+    
+    <div class="about-text">
+      {%- if page.title -%}
+        <h1 class="page-heading">{{ page.title | default: "About Me" }}</h1>
+      {%- else -%}
+        <h1 class="page-heading">About Me</h1>
+      {%- endif -%}
+      
+      {{ content }}
+      
+      </div>
+  </section>
 
   {%- if site.posts.size > 0 -%}
     {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
-    <h2 class="post-list-heading">{{ page.list_title | default: "Posts" }}</h2>
+    <h2 class="post-list-heading">{{ page.list_title | default: "Recent Posts" }}</h2>
     <ul class="post-list">
       {%- for post in site.posts -%}
         <li>
@@ -22,7 +32,7 @@ layout: default
             </a>
           </h3>
           {%- if site.show_excerpts -%}
-            {{ post.excerpt }}
+            <p>{{ post.excerpt | strip_html | truncatewords: 30 }}</p>
           {%- endif -%}
         </li>
       {%- endfor -%}
