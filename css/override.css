@@ -109,6 +109,16 @@ hr {
     color: #90EE90; /* Light Green for variables */
 }
 
+/* --- Blue Palette --- */
+:root {
+  --navy: #123c5e;      /* deep blue: headings, header/footer bg */
+  --mid-blue: #1e5f8c;  /* nav links, hover accents */
+  --sky-blue: #2e86ab;  /* buttons, links */
+  --light-blue: #eaf4fb;/* page background */
+  --pale-blue: #d7e8f5; /* borders, dividers */
+  --orange: #d97a3f;    /* complement accent */
+}
+
 /* Button styles */
 .btn {
   display: inline-block;
@@ -122,42 +132,42 @@ hr {
 
 .btn-primary {
   background-color: transparent;
-  color: #2a7ae2 !important;
-  border-color: #2a7ae2;
+  color: var(--mid-blue) !important;
+  border-color: var(--sky-blue);
 }
 
 .btn-primary:hover {
-  background-color: transparent;
-  color: #1f64bb !important;
-  border-color: #1f64bb;
+  background-color: var(--sky-blue);
+  color: #fff !important;
+  border-color: var(--sky-blue);
 }
 
 /* --- Global Typography & Spacing Improvements --- */
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   line-height: 1.6;
-  color: #4a4a4a; /* Slightly softer dark gray for a vintage feel */
-  background-color: #f5f5dc; /* Beige background */
+  color: #33414f;
+  background-color: var(--light-blue);
 }
 h1, h2, h3, h4, h5, h6 {
   font-weight: 600;
-  color: #222;
+  color: var(--navy);
   margin-top: 1.5em;
   margin-bottom: 0.5em;
 }
 
 h1 { font-size: 2.5rem; }
-h2 { font-size: 2rem; border-bottom: 2px solid #eee; padding-bottom: 0.3em; }
+h2 { font-size: 2rem; border-bottom: 2px solid var(--pale-blue); padding-bottom: 0.3em; }
 h3 { font-size: 1.5rem; }
 
 a {
-  color: #2a7ae2;
+  color: var(--sky-blue);
   text-decoration: none;
   transition: color 0.2s ease, text-decoration 0.2s ease;
 }
 
 a:hover {
-  color: #1155cc;
+  color: var(--orange);
   text-decoration: underline;
 }
 
@@ -167,9 +177,9 @@ a:hover {
 
 /* --- Header/Nav Styling --- */
 .site-header {
-  background-color: #f5f5dc; /* Tan header */
-  border-top: 5px solid #8b4513; /* Dark brown accent border at the very top */
-  border-bottom: 2px solid #f5f5dc; /* Slightly darker tan for the bottom border */
+  background-color: var(--light-blue);
+  border-top: 5px solid var(--orange); /* complement accent border at the very top */
+  border-bottom: 2px solid var(--pale-blue);
   padding-bottom: 15px;
 }
 
@@ -200,9 +210,10 @@ a:hover {
   gap: 30px;
   margin-bottom: 3em;
   padding: 2em;
-  background-color: #f5f5dc; /* Dusty Slate Blue */
+  background-color: #fff;
+  border: 1px solid var(--pale-blue);
   border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(139, 69, 19, 0.15); 
+  box-shadow: 0 4px 8px rgba(30, 95, 140, 0.12);
 }
 
 .about-text {
@@ -211,7 +222,7 @@ a:hover {
 
 .about-text p {
   font-size: 1.1rem;
-  color: #555;
+  color: #46586a;
 }
 
 /* Placeholder for a profile image */
@@ -236,7 +247,7 @@ a:hover {
 
 .post-meta {
   font-size: 0.9rem;
-  color: #888;
+  color: #7c8ea0;
   display: block;
   margin-bottom: 0.2em;
   text-transform: uppercase;
@@ -246,39 +257,35 @@ a:hover {
 .post-link {
   font-size: 1.6rem;
   font-weight: 600;
-  color: #222;
+  color: var(--navy);
 }
 
 .post-link:hover {
-  color: #2a7ae2;
+  color: var(--orange);
   text-decoration: none;
 }
 
-/* Button styles */
-.btn-primary {
-  background-color: #d2b48c; /* Tan background */
-  color: #4a4a4a !important; /* Dark gray/brown text for readability */
-  border-color: #b89f7a; /* Slightly darker tan border */
-}
-
-.btn-primary:hover {
-  background-color: #b89f7a; /* Darker tan on hover */
-  color: #fff !important; /* Changes text to white on hover */
-  border-color: #8b4513; /* Dark brown border on hover */
-}
 /* --- Footer Styling --- */
 .site-footer {
-  background-color: #f5f5dc; /* Tan to match the header */
-  border-top: 2px solid #b89f7a; /* Matches the header's bottom border */
-  border-bottom: 5px solid #8b4513; /* Dark brown accent to match the header's top border */
-  color: #4a4a4a; /* Ensures text stays dark and readable against the tan */
+  background-color: var(--navy);
+  border-top: 3px solid var(--orange);
+  border-bottom: 5px solid var(--navy);
+  color: var(--light-blue);
 }
 
-/* Ensure the links in the footer also look good against the tan */
+/* Ensure the links in the footer also look good against navy */
 .site-footer a {
-  color: #8b4513;
+  color: #9fd0f0;
 }
 
 .site-footer a:hover {
-  color: #5e2f0d;
+  color: var(--orange);
+}
+
+.site-footer .svg-icon {
+  fill: #9fd0f0;
+}
+
+.site-footer a:hover .svg-icon {
+  fill: var(--orange);
 }

@@ -23,8 +23,6 @@ google_scholar_username: "https://scholar.google.com/citations?user=y2k-k3gAAAAJ
 #########################################################################################
 theme: "minima"
 
-rss: rss
-
 kramdown:
   syntax_highlighter_opts:
     disable: true
@@ -35,7 +33,6 @@ collections:
     permalink: /publications/:name/
 
 plugins:
-  - jekyll-feed
   - jekyll-sitemap
 
 
