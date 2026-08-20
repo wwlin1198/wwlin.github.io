@@ -2,7 +2,7 @@
 layout: publication
 title: "Toward creative problem solving agents: Action discovery through behavior babbling"
 authors: "Your Name, Co-authors"
-venue: "IEEE Conference"
+venue: "IEEE Conference ICDL"
 year: 2021
 paper_url: "https://ieeexplore.ieee.org/abstract/document/9515658"
 type: "conference"
